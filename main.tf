@@ -17,13 +17,11 @@ resource "digitalocean_droplet" "jenkins" {
   region   = var.region
   size     = "s-2vcpu-2gb"
   ssh_keys = [data.digitalocean_ssh_key.ssh_key.id]
-
 }
 
 data "digitalocean_ssh_key" "ssh_key" {
   name = var.ssh_key_name
 }
-
 resource "digitalocean_kubernetes_cluster" "k8s" {
   name    = "k8s"
   region  = var.region
@@ -52,7 +50,7 @@ output "jenkins-ip" {
   value = digitalocean_droplet.jenkins.ipv4_address
 }
 
-resource "local_file" "foo" {
+resource "local_file" "kube_config" {
   content  = digitalocean_kubernetes_cluster.k8s.kube_config.0.raw_config
   filename = "kube_config.yaml"
 }
